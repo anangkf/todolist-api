@@ -1,31 +1,33 @@
 {
-	"db": {
-		"host": "exampleHost",
-		"user": "exampleUsername",
-		"password": "examplePassword",
-		"database": "exampleDatabase",
-		"charset": "utf8mb4",
-		"rejectEmpty": true
-	},
+  "db": {
+    "host": "exampleHost",
+    "user": "exampleUsername",
+    "password": "examplePassword",
+    "database": "exampleDatabase",
+    "charset": "utf8mb4",
+    "rejectEmpty": true
+  },
 
-	"port": 10000,
+  "port": 10000,
 
-	"jwt": {
-		"publicKey": "/path/to/public.pem",
-		"privateKey": "/path/to/private.pem",
-		"passcode": "Your passcode here..",
-		"expired": 1800000
-	},
+  "jwt": {
+    "publicKey": "/path/to/public.pem",
+    "privateKey": "/path/to/private.pem",
+    "passcode": "Your passcode here..",
+    "expired": 1800000
+  },
 
-	"certificates": [
-		"/path/to/cert.pem"
-	],
+  "bcrypt": {
+    "saltRound": "8 | 9 | 10"
+  },
 
-	"site": {
-		"url": "http://localhost:10000",
-		"title": {
-			"main": "Site main title",
-			"sub": "Sub-title heheheh"
-		}
-	}
+  "certificates": ["/path/to/cert.pem"],
+
+  "site": {
+    "url": "http://localhost:10000",
+    "title": {
+      "main": "Site main title",
+      "sub": "Sub-title heheheh"
+    }
+  }
 }
