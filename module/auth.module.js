@@ -3,6 +3,7 @@ const { debug } = config;
 const mysql = new (require(`${__class_dir}/mariadb.class.js`))(config.db);
 const Joi = require('joi');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 class _auth {
   async add(data) {
@@ -44,6 +45,66 @@ class _auth {
         return {
           status: true,
           data,
+        };
+      })
+      .catch((error) => {
+        if (debug) {
+          console.error('add task Error: ', error);
+        }
+
+        return {
+          status: false,
+          error,
+        };
+      });
+  }
+
+  async login(data) {
+    // Validate data
+    const schema = Joi.object({
+      email: Joi.string().email().required(),
+      password: Joi.string().min(8).required(),
+    }).options({
+      abortEarly: false,
+    });
+    const validation = schema.validate(data);
+    if (validation.error) {
+      const errorDetails = validation.error.details.map(
+        (detail) => detail.message
+      );
+
+      return {
+        status: false,
+        code: 422,
+        error: errorDetails.join(', '),
+      };
+    }
+
+    // Insert data to database
+    const sql = {
+      query: `SELECT * FROM users WHERE email = ?`,
+      params: [data.email],
+    };
+
+    return mysql
+      .query(sql.query, sql.params)
+      .then(async ([user]) => {
+        const { password, createdAt, updatedAt, ...userForToken } = user;
+        const isUserMatch = await bcrypt.compare(data.password, password);
+
+        if (!isUserMatch) {
+          return {
+            status: false,
+            code: 401,
+            error: 'Password incorrect!',
+          };
+        }
+
+        const token = jwt.sign(userForToken, config.jwt.publicKey);
+
+        return {
+          status: true,
+          token,
         };
       })
       .catch((error) => {

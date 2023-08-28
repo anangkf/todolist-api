@@ -12,4 +12,10 @@ router.post('/register', async function (req, res, next) {
   helper.sendResponse(res, { ...user, data: { ...user.data, user: body } });
 });
 
+router.post('/login', async function (req, res, next) {
+  const { body } = req;
+  const user = await authModule.login(body);
+  helper.sendResponse(res, user);
+});
+
 module.exports = router;
